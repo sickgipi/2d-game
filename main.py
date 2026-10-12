@@ -8,24 +8,42 @@ TILE = 32  # lato di ogni tile in pixel
 #   .  prato (si cammina)
 #   #  muro   T  albero   W  acqua  (bloccano il passaggio)
 MAPPA = [
-    "#########################",
-    "#.......................#",
-    "#...TT..............WW..#",
-    "#...TT..............WW..#",
-    "#.......................#",
-    "#.........#####.........#",
-    "#.........#...#.........#",
-    "#.........#...#.........#",
-    "#.......................#",
-    "#..WWW..................#",
-    "#..WWW.......TT.........#",
-    "#............TT.........#",
-    "#.......................#",
-    "#.....#######...........#",
-    "#.......####............#",
-    "#.......................#",
-    "#.......................#",
-    "#########################",
+    "##################################################",
+    "#.................T..............................#",
+    "#..........................T.....................#",
+    "#.........T...........................T..........#",
+    "#......................T...T.................T...#",
+    "#..........T.....................TT...W..........#",
+    "#.................................WWWWWWWWW......#",
+    "#............T..................WWWWWWWWWWWWW....#",
+    "#............T..T...............WWWWWWWWWWWWW....#",
+    "#..............................WWWWWWWWWWWWWWW...#",
+    "#...................T..T........WWWWWWWWWWWWW.T..#",
+    "#...............................WWWWWWWWWWWWW....#",
+    "#.....T.T.........................WWWWWWWWW......#",
+    "#.............T.....T....T............W..........#",
+    "#........TTTTT......T...........................T#",
+    "#.....T...T.T..T....................TT.......T...#",
+    "#....T...T.TTT.T.TT..............................#",
+    "#.....T...TTTTTTT.......................TT....T..#",
+    "#....TT........T.T..............T...........T....#",
+    "#...TT..T...T.T.TT..........................T....#",
+    "#.T...T.TT...T.T.TT.###########T....T............#",
+    "#.T....TT....T...T..#.........#............T.....#",
+    "#......T......T.T.T.#.........#..................#",
+    "#....T...T..T..T..T.#.........#......T...........#",
+    "#.....TT.T.T...TT.TT#.........#.......T..........#",
+    "#.....TT...T.....T..#.........#...............T..#",
+    "#..........T..T...T.####..#####..................#",
+    "#........T..TT.T.T...................T...........#",
+    "#....T....T..T..T.T.......TT........TT...........#",
+    "#.......TT..T....T.......T...............T.......#",
+    "#.T.....T....T..T.T...........................T..#",
+    "#..T.....T.T...T......T............T.........T...#",
+    "#.....T.TTT..T...T......................T........#",
+    "#.............................................T..#",
+    "#..........................................T.....#",
+    "##################################################",
 ]
 
 COLORI = {
@@ -36,24 +54,26 @@ COLORI = {
 }
 SOLIDI = "#TW"  # i caratteri che bloccano il giocatore
 
-RIGHE = len(MAPPA)
 COLONNE = len(MAPPA[0])
-schermo = pygame.display.set_mode((COLONNE * TILE, RIGHE * TILE))
-pygame.display.set_caption("testing")
+RIGHE = len(MAPPA)
+MAPPA_LARGHEZZA = COLONNE * TILE  # dimensioni del mondo in pixel
+MAPPA_ALTEZZA = RIGHE * TILE
+
+# La finestra ha una dimensione fissa, indipendente dalla mappa
+FINESTRA_L, FINESTRA_A = 800, 576
+schermo = pygame.display.set_mode((FINESTRA_L, FINESTRA_A))
+pygame.display.set_caption("Il mio Zelda")
 clock = pygame.time.Clock()
 
-# Costruiamo una lista di Rect, uno per ogni tile solido, per le collisioni
+# Un Rect per ogni tile solido, per le collisioni
 ostacoli = []
 for riga, testo in enumerate(MAPPA):
     for colonna, carattere in enumerate(testo):
         if carattere in SOLIDI:
             ostacoli.append(pygame.Rect(colonna * TILE, riga * TILE, TILE, TILE))
 
-# Il giocatore e' un po' piu' piccolo di un tile, cosi' passa nei varchi
 giocatore = pygame.Rect(0, 0, 24, 24)
-giocatore.center = (3 * TILE, 8 * TILE)
-# I Rect salvano solo numeri interi: teniamo la posizione precisa
-# (con i decimali) in un Vector2 e la copiamo nel Rect dopo ogni movimento
+giocatore.center = (4 * TILE + TILE // 2, 4 * TILE + TILE // 2)
 pos = pygame.Vector2(giocatore.topleft)
 velocita = 200
 
@@ -78,11 +98,7 @@ while running:
     if direzione.length() > 0:
         direzione = direzione.normalize()
 
-    # --- MOVIMENTO CON COLLISIONI ---
-    # Muoviamo e controlliamo un asse alla volta: cosi' se sbatti contro
-    # un muro in diagonale, scivoli lungo il muro invece di bloccarti.
-
-    # Asse X
+    # --- MOVIMENTO CON COLLISIONI (un asse alla volta) ---
     pos.x += direzione.x * velocita * dt
     giocatore.x = round(pos.x)
     for ostacolo in ostacoli:
@@ -93,7 +109,6 @@ while running:
                 giocatore.left = ostacolo.right
             pos.x = giocatore.x
 
-    # Asse Y
     pos.y += direzione.y * velocita * dt
     giocatore.y = round(pos.y)
     for ostacolo in ostacoli:
@@ -104,13 +119,30 @@ while running:
                 giocatore.top = ostacolo.bottom
             pos.y = giocatore.y
 
+    # --- CAMERA ---
+    # La camera e' il punto del mondo che corrisponde all'angolo in alto
+    # a sinistra della finestra. La centriamo sul giocatore...
+    cam_x = giocatore.centerx - FINESTRA_L // 2
+    cam_y = giocatore.centery - FINESTRA_A // 2
+    # ...ma non la lasciamo uscire dai bordi della mappa
+    cam_x = max(0, min(cam_x, MAPPA_LARGHEZZA - FINESTRA_L))
+    cam_y = max(0, min(cam_y, MAPPA_ALTEZZA - FINESTRA_A))
+
     # --- DISEGNO ---
-    for riga, testo in enumerate(MAPPA):
-        for colonna, carattere in enumerate(testo):
-            rettangolo = (colonna * TILE, riga * TILE, TILE, TILE)
+    # Disegniamo solo i tile visibili nella finestra
+    prima_col = cam_x // TILE
+    ultima_col = min(COLONNE, (cam_x + FINESTRA_L) // TILE + 1)
+    prima_riga = cam_y // TILE
+    ultima_riga = min(RIGHE, (cam_y + FINESTRA_A) // TILE + 1)
+
+    for riga in range(prima_riga, ultima_riga):
+        for colonna in range(prima_col, ultima_col):
+            carattere = MAPPA[riga][colonna]
+            # posizione sullo schermo = posizione nel mondo - camera
+            rettangolo = (colonna * TILE - cam_x, riga * TILE - cam_y, TILE, TILE)
             pygame.draw.rect(schermo, COLORI[carattere], rettangolo)
 
-    pygame.draw.rect(schermo, (30, 60, 200), giocatore)
+    pygame.draw.rect(schermo, (30, 60, 200), giocatore.move(-cam_x, -cam_y))
     pygame.display.flip()
 
 pygame.quit()
