@@ -132,6 +132,6 @@ class Game:
         self.screen.blit(veil, (0, 0))
         title = "GAME OVER" if self.state == GAME_OVER else "HAI VINTO!"
         line1 = self.font_big.render(title, True, (255, 255, 255))
-        line2 = self.font_small.render("Premi R per ricominciare", True, (255, 255, 255))
+        line2 = self.font_small.render("Sei morto! Premi R per ricominciare", True, (255, 255, 255))
         self.screen.blit(line1, line1.get_rect(center=(WINDOW_WIDTH // 2, WINDOW_HEIGHT // 2 - 20)))
         self.screen.blit(line2, line2.get_rect(center=(WINDOW_WIDTH // 2, WINDOW_HEIGHT // 2 + 30)))
