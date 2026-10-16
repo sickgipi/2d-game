@@ -1,6 +1,7 @@
 import pygame
 
-from .settings import SOLID_TILES, TILE_COLORS, TILE_SIZE
+from .assets import load_frames
+from .settings import (IMAGES_DIR, SOLID_TILES, TILE_IMAGE_INDEX, TILE_SIZE)
 
 
 class TileMap:
@@ -15,6 +16,12 @@ class TileMap:
         self.num_rows = len(self.rows)
         self.width = self.cols * TILE_SIZE     # dimensioni in pixel
         self.height = self.num_rows * TILE_SIZE
+
+        # Il tileset e' una riga di quadratini: associamo a ogni carattere
+        # della mappa l'immagine corrispondente
+        tileset = load_frames(IMAGES_DIR / "tileset.png", TILE_SIZE, TILE_SIZE)[0]
+        self.tile_images = {char: tileset[index]
+                            for char, index in TILE_IMAGE_INDEX.items()}
 
         # Un Rect per ogni tile solido, per le collisioni
         self.obstacles = []
@@ -41,8 +48,6 @@ class TileMap:
 
         for row_index in range(first_row, last_row):
             for col_index in range(first_col, last_col):
-                tile = self.rows[row_index][col_index]
-                rect = (col_index * TILE_SIZE - camera.x,
-                        row_index * TILE_SIZE - camera.y,
-                        TILE_SIZE, TILE_SIZE)
-                pygame.draw.rect(surface, TILE_COLORS[tile], rect)
+                image = self.tile_images[self.rows[row_index][col_index]]
+                surface.blit(image, (col_index * TILE_SIZE - camera.x,
+                                     row_index * TILE_SIZE - camera.y))

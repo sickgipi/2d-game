@@ -2,10 +2,12 @@ import random
 
 import pygame
 
+from .assets import load_frames
 from .camera import Camera
 from .enemy import Enemy
 from .player import Player
-from .settings import (ENEMY_COUNT, ENEMY_MIN_SPAWN_DISTANCE, FPS, MAPS_DIR,
+from .settings import (ENEMY_COUNT, ENEMY_MIN_SPAWN_DISTANCE, FPS,
+                       HEART_SIZE, HEART_SPACING, IMAGES_DIR, MAPS_DIR,
                        PLAYER_MAX_HEALTH, PLAYER_SPAWN_TILE, TILE_SIZE, TITLE,
                        WINDOW_HEIGHT, WINDOW_WIDTH)
 from .tilemap import TileMap
@@ -32,6 +34,9 @@ class Game:
         self.clock = pygame.time.Clock()
         self.font_big = pygame.font.Font(None, 72)
         self.font_small = pygame.font.Font(None, 32)
+
+        # Immagine del cuore: frame 0 = pieno, frame 1 = vuoto
+        self.hearts = load_frames(IMAGES_DIR / "hearts.png", *HEART_SIZE)[0]
 
         self.tilemap = TileMap(MAPS_DIR / "level1.txt")
         self.camera = Camera(self.tilemap.width, self.tilemap.height)
@@ -121,10 +126,10 @@ class Game:
     def draw_hud(self):
         # Interfaccia fissa sullo schermo: qui NON si usa la camera
         for i in range(PLAYER_MAX_HEALTH):
-            color = (220, 40, 60) if i < self.player.health else (70, 70, 70)
-            pygame.draw.rect(self.screen, color, (10 + i * 28, 10, 22, 22))
+            heart = self.hearts[0] if i < self.player.health else self.hearts[1]
+            self.screen.blit(heart, (10 + i * HEART_SPACING, 8))
         text = self.font_small.render(f"Nemici: {len(self.enemies)}", True, (255, 255, 255))
-        self.screen.blit(text, (10, 40))
+        self.screen.blit(text, (10, 38))
 
     def draw_end_screen(self):
         veil = pygame.Surface((WINDOW_WIDTH, WINDOW_HEIGHT), pygame.SRCALPHA)
@@ -132,6 +137,6 @@ class Game:
         self.screen.blit(veil, (0, 0))
         title = "GAME OVER" if self.state == GAME_OVER else "HAI VINTO!"
         line1 = self.font_big.render(title, True, (255, 255, 255))
-        line2 = self.font_small.render("Sei morto! Premi R per ricominciare", True, (255, 255, 255))
+        line2 = self.font_small.render("Premi R per ricominciare", True, (255, 255, 255))
         self.screen.blit(line1, line1.get_rect(center=(WINDOW_WIDTH // 2, WINDOW_HEIGHT // 2 - 20)))
         self.screen.blit(line2, line2.get_rect(center=(WINDOW_WIDTH // 2, WINDOW_HEIGHT // 2 + 30)))

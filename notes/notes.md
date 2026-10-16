@@ -1,4 +1,4 @@
-# Il mio Zelda: roadmap del progetto
+# 2d game: roadmap del progetto
 
 Adventure RPG 2D su PC, ispirato a *The Legend of Zelda: Minish Cap*.
 Fatto con **Python + pygame-ce**, imparando facendo.
@@ -25,8 +25,8 @@ Legenda: `[x]` fatto · `[ ]` da fare · 📦 consegnato, da verificare sul tuo 
 - [x] Python 3 installato
 - [x] Ambiente virtuale `venv` creato e attivato
 - [x] `pygame-ce` installato (il Pygame classico non si compilava con Python 3.14)
-- [ ] `requirements.txt` creato (`pip freeze > requirements.txt`)
-- [ ] Repository Git inizializzato (`git init`)
+- [x] `requirements.txt` creato (`pip freeze > requirements.txt`)
+- [x] Repository Git inizializzato (`git init`)
 
 ## Fase 1: Fondamenta del gioco
 
@@ -44,8 +44,8 @@ Legenda: `[x]` fatto · `[ ]` da fare · 📦 consegnato, da verificare sul tuo 
 
 ## Fase 3: Struttura e grafica di base
 
-- [ ] 📦 Refactor in più file: `settings`, `utils`, `tilemap`, `camera`, `player`, `enemy`, `game`
-- [ ] 📦 Mappa caricata da file (`assets/maps/level1.txt`)
+- [x] 📦 Refactor in più file: `settings`, `utils`, `tilemap`, `camera`, `player`, `enemy`, `game`
+- [x] 📦 Mappa caricata da file (`assets/maps/level1.txt`)
 - [ ] 📦 Sprite e animazioni (spritesheet, classe `Animation`, tileset, cuori)
 - [ ] Il gioco parte sul tuo PC con la nuova struttura e grafica
 
