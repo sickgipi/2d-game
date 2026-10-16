@@ -1,4 +1,4 @@
-# 🗡️ Zelda-Inspired 2D Game
+# 🗡️ 2D Game(in progress)
 
 A personal project created to learn and experiment with **Python and Pygame**, inspired by the classic *The Legend of Zelda* games.
 
