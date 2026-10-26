@@ -1,7 +1,7 @@
 import pygame
 
 from .animation import Animation
-from .assets import load_frames, load_image
+from .assets import load_frames, load_image, shadow
 from .settings import (IMAGES_DIR, KNOCKBACK_DECAY, KNOCKBACK_FORCE,
                        PLAYER_INVULNERABLE_TIME, PLAYER_MAX_HEALTH,
                        PLAYER_SIZE, PLAYER_SPEED, PLAYER_WALK_FPS,
@@ -36,6 +36,7 @@ class Player:
         self.rect.center = self.spawn_point
         self.pos.update(self.rect.topleft)
         self.health = PLAYER_MAX_HEALTH
+        self.rupees = 0
         self.invulnerable = 0                    # secondi di protezione rimasti
         self.knockback = pygame.Vector2(0, 0)
         self.facing = pygame.Vector2(0, 1)       # all'inizio guarda in giu'
@@ -85,6 +86,10 @@ class Player:
         self.invulnerable = PLAYER_INVULNERABLE_TIME
         self.knockback = direction_between(source_center, self.rect.center) * KNOCKBACK_FORCE
 
+    def heal(self):
+        """Recupera un cuore, senza superare il massimo."""
+        self.health = min(PLAYER_MAX_HEALTH, self.health + 1)
+
     def update(self, dt, obstacles):
         self.attack_timer = max(0, self.attack_timer - dt)
         self.cooldown = max(0, self.cooldown - dt)
@@ -125,6 +130,8 @@ class Player:
             animation.reset()
 
     def draw(self, surface, camera):
+        ground = shadow(PLAYER_SIZE, PLAYER_SIZE // 3)
+        surface.blit(ground, camera.apply(ground.get_rect(center=self.rect.midbottom)))
         # Lampeggia mentre e' invulnerabile
         if self.invulnerable <= 0 or int(self.invulnerable * 10) % 2 == 0:
             image = self.animations[self.facing_name].image

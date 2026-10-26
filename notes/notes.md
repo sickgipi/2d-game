@@ -44,10 +44,11 @@ Legenda: `[x]` fatto · `[ ]` da fare · 📦 consegnato, da verificare sul tuo 
 
 ## Fase 3: Struttura e grafica di base
 
-- [x] 📦 Refactor in più file: `settings`, `utils`, `tilemap`, `camera`, `player`, `enemy`, `game`
-- [x] 📦 Mappa caricata da file (`assets/maps/level1.txt`)
-- [ ] 📦 Sprite e animazioni (spritesheet, classe `Animation`, tileset, cuori)
-- [ ] Il gioco parte sul tuo PC con la nuova struttura e grafica
+- [x] Refactor in più file: `settings`, `utils`, `tilemap`, `camera`, `player`, `enemy`, `game`
+- [x] Mappa caricata da file (`assets/maps/level1.txt`)
+- [x] Sprite e animazioni (spritesheet, classe `Animation`, tileset, cuori)
+- [x] Il gioco parte sul tuo PC con la nuova struttura e grafica
+- [x] Ombre sotto i personaggi e acqua animata
 
 ## Fase 4: I tuoi sprite
 
@@ -61,9 +62,10 @@ Legenda: `[x]` fatto · `[ ]` da fare · 📦 consegnato, da verificare sul tuo 
 
 ## Fase 5: Un gioco "completo"
 
-- [ ] **Menu principale** e **pausa** (altri stati di gioco)
-- [ ] **Oggetti da raccogliere**: cuori che curano, rupie, chiavi
-- [ ] HUD con contatore rupie e oggetti
+- [x] **Menu principale** e **pausa** (altri stati di gioco)
+- [x] **Oggetti da raccogliere**: cuori che curano, rupie
+- [ ] Chiavi
+- [x] HUD con contatore rupie
 - [ ] **Suoni ed effetti** (colpo di spada, danno, raccolta) e musica
 
 ## Fase 6: Mondo vero
@@ -83,7 +85,7 @@ Legenda: `[x]` fatto · `[ ]` da fare · 📦 consegnato, da verificare sul tuo 
 ## Fase 8: Nemici e sfide
 
 - [ ] Più tipi di nemici, con comportamenti diversi
-- [ ] Drop dai nemici (cuori, rupie)
+- [x] Drop dai nemici (cuori, rupie)
 - [ ] Inseguimento che aggira gli ostacoli (**pathfinding A\***)
 - [ ] Un boss
 
@@ -126,7 +128,7 @@ gioco-2d/
 ├── .gitignore
 ├── assets/
 │   ├── maps/level1.txt
-│   ├── images/              # player, enemy, sword, tileset, hearts
+│   ├── images/              # player, enemy, sword, tileset, hearts, items
 │   └── sounds/
 ├── tools/
 │   └── make_placeholder_assets.py
@@ -139,6 +141,7 @@ gioco-2d/
     ├── camera.py            # camera
     ├── player.py            # giocatore
     ├── enemy.py             # nemici
+    ├── item.py              # oggetti da raccogliere (cuori, rupie)
     └── game.py              # game loop e coordinamento
 ```
 
@@ -183,11 +186,11 @@ source venv/bin/activate
 pip install -r requirements.txt
 ```
 
-Comandi di gioco: **WASD / frecce** per muoverti, **spazio** per attaccare, **R** per ricominciare.
+Comandi di gioco: **Invio** per iniziare, **WASD / frecce** per muoverti, **spazio** per attaccare,
+**P / Esc** per la pausa (in pausa **Q** per uscire), **R** per ricominciare.
 
 ---
 
 ## Prossimo passo
 
-Chiudere la **Fase 3** (verificare che il gioco parta con la nuova struttura), poi scegliere se continuare con la
-**Fase 4** (i tuoi sprite) o con la **Fase 5** (menu, oggetti e suoni).
+Scegliere se continuare con la **Fase 4** (i tuoi sprite) o finire la **Fase 5** (chiavi e suoni).

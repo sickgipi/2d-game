@@ -1,7 +1,8 @@
 import pygame
 
 from .assets import load_frames
-from .settings import (IMAGES_DIR, SOLID_TILES, TILE_IMAGE_INDEX, TILE_SIZE)
+from .settings import (IMAGES_DIR, SOLID_TILES, TILE_IMAGE_INDEX, TILE_SIZE,
+                       WATER_ANIMATION_FPS, WATER_FRAMES)
 
 
 class TileMap:
@@ -22,6 +23,8 @@ class TileMap:
         tileset = load_frames(IMAGES_DIR / "tileset.png", TILE_SIZE, TILE_SIZE)[0]
         self.tile_images = {char: tileset[index]
                             for char, index in TILE_IMAGE_INDEX.items()}
+        self.water_images = [tileset[index] for index in WATER_FRAMES]
+        self.time = 0                          # per animare l'acqua
 
         # Un Rect per ogni tile solido, per le collisioni
         self.obstacles = []
@@ -38,6 +41,11 @@ class TileMap:
                 for row_index, row in enumerate(self.rows)
                 for col_index, tile in enumerate(row)
                 if tile == "."]
+
+    def update(self, dt):
+        self.time += dt
+        frame = int(self.time * WATER_ANIMATION_FPS) % len(self.water_images)
+        self.tile_images["W"] = self.water_images[frame]
 
     def draw(self, surface, camera):
         """Disegna solo i tile visibili nella finestra."""

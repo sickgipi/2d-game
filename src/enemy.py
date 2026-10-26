@@ -4,7 +4,7 @@ from functools import lru_cache
 import pygame
 
 from .animation import Animation
-from .assets import load_frames, tinted
+from .assets import load_frames, shadow, tinted
 from .settings import (ENEMY_CHASE_RADIUS, ENEMY_FPS, ENEMY_HEALTH,
                        ENEMY_HIT_INVULNERABLE, ENEMY_HIT_TINT, ENEMY_SIZE,
                        ENEMY_SPEED, IMAGES_DIR, KNOCKBACK_DECAY,
@@ -63,6 +63,8 @@ class Enemy:
         self.animation.update(dt)
 
     def draw(self, surface, camera):
+        ground = shadow(ENEMY_SIZE, ENEMY_SIZE // 3)
+        surface.blit(ground, camera.apply(ground.get_rect(center=self.rect.midbottom)))
         frames = self.hit_frames if self.invulnerable > 0 else self.frames
         image = frames[self.animation.index]
         sprite_rect = image.get_rect(midbottom=self.rect.midbottom)

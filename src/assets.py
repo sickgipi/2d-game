@@ -25,6 +25,14 @@ def load_frames(path, frame_width, frame_height):
     return rows
 
 
+@lru_cache(maxsize=None)
+def shadow(width, height):
+    """Un'ombra ovale semitrasparente da mettere sotto i personaggi."""
+    surface = pygame.Surface((width, height), pygame.SRCALPHA)
+    pygame.draw.ellipse(surface, (0, 0, 0, 70), surface.get_rect())
+    return surface
+
+
 def tinted(image, color):
     """Copia dell'immagine schiarita (per l'effetto 'colpito')."""
     result = image.copy()

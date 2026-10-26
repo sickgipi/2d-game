@@ -19,6 +19,8 @@ SOLID_TILES = "#TW"        # i caratteri che bloccano il passaggio
 # Quale immagine del tileset usare per ogni carattere della mappa
 # (0 = primo quadratino da sinistra in tileset.png, 1 = secondo, ...)
 TILE_IMAGE_INDEX = {".": 0, "#": 1, "T": 2, "W": 3}
+WATER_FRAMES = (3, 4)      # l'acqua alterna questi due tile, per muoversi
+WATER_ANIMATION_FPS = 2
 
 # Grafica
 SPRITE_SIZE = 32           # lato di un frame negli spritesheet
@@ -52,3 +54,10 @@ ENEMY_HIT_TINT = (120, 120, 120)   # quanto si schiarisce quando e' colpito
 # Contraccolpo
 KNOCKBACK_FORCE = 300
 KNOCKBACK_DECAY = 8              # piu' e' alto, piu' in fretta svanisce
+
+# Oggetti lasciati dai nemici
+ITEM_SIZE = 14
+ITEM_LIFETIME = 10.0             # secondi prima che sparisca
+ITEM_BLINK_TIME = 3.0            # negli ultimi secondi lampeggia
+HEART_DROP_CHANCE = 0.35         # probabilita' (0-1) che un nemico lasci un cuore
+RUPEE_DROP_CHANCE = 0.6          # ...e una rupia

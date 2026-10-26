@@ -171,17 +171,22 @@ def tile_tree():
     return s
 
 
-def tile_water():
+def tile_water(shift=0):
+    """'shift' sposta le onde a destra: due tile con shift diversi,
+    alternati, fanno muovere l'acqua."""
     s = new_canvas()
     s.fill((50, 110, 210))
     for x, y, w in ((2, 3, 4), (9, 7, 4), (4, 11, 4), (11, 14, 3)):
-        s.fill((125, 180, 240), (x, y, w, 1))
+        for dx in range(w):
+            # "% 16" fa ricominciare l'onda dall'altro lato: i tile si uniscono bene
+            s.set_at(((x + dx + shift) % 16, y), (125, 180, 240))
     return s
 
 
 def make_tileset():
-    sheet = new_canvas(64, 16)
-    for i, tile in enumerate([tile_grass(), tile_wall(), tile_tree(), tile_water()]):
+    tiles = [tile_grass(), tile_wall(), tile_tree(), tile_water(), tile_water(2)]
+    sheet = new_canvas(16 * len(tiles), 16)
+    for i, tile in enumerate(tiles):
         sheet.blit(tile, (i * 16, 0))
     save(scale(sheet), "tileset.png")
 
@@ -209,9 +214,39 @@ def make_hearts():
     save(scale(sheet, 3), "hearts.png")
 
 
+# ---------------- oggetti a terra: cuoricino e rupia ----------------
+RUPEE = ["..#..",
+         ".#L#.",
+         "#LGg#",
+         "#LGg#",
+         "#LGg#",
+         "#LGg#",
+         ".#g#.",
+         "..#.."]
+RUPEE_COLORS = {"#": (16, 40, 24), "L": (180, 255, 200),
+                "G": (40, 200, 100), "g": (20, 130, 60)}
+
+
+def make_items():
+    sheet = new_canvas(32, 16)
+    heart = new_canvas()
+    for y, row in enumerate(HEART):
+        for x, char in enumerate(row):
+            if char == "#":
+                heart.set_at((x + 4, y + 5), (225, 45, 65))
+    heart.set_at((5, 6), (255, 190, 190))
+    sheet.blit(add_outline(heart), (0, 0))
+    for y, row in enumerate(RUPEE):
+        for x, char in enumerate(row):
+            if char != ".":
+                sheet.set_at((16 + x + 5, y + 4), RUPEE_COLORS[char])
+    save(scale(sheet), "items.png")
+
+
 if __name__ == "__main__":
     make_player()
     make_enemy()
     make_sword()
     make_tileset()
     make_hearts()
+    make_items()
